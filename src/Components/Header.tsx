@@ -10,6 +10,10 @@ import {
   SelectValue,
 } from "@/Components/ui/select"
 import { Input } from "@/Components/ui/input"
+import { Checkbox } from "@/Components/ui/checkbox"
+import { Label } from "@/Components/ui/label"
+
+
 
 const sortOptions = [
   "Default",
@@ -47,10 +51,22 @@ export function Header(){
       <div className='Search input'>
       <Input placeholder="Search movies ..."
       value={search}
-      onChange={(e)=> setSearch(e.target.value)}/>
-
+      onChange={(e)=> setSearch(e.target.value)}
+      />
+    </div>
+      <div className='Checkbox'>
+        <Checkbox className='Checkbox input'
+        id="include-synopsis"
+        checked={includeSynopsis}
+        onCheckedChange={(checked)=> setIncludeSynopsis(Boolean(checked))}
+        />
+          <Label htmlFor="Include synopsis" className='Text Checkbox'>
+            Include synopsis in search
+          </Label>
       </div>
     </div>
+
+
 
     </header>
   )
