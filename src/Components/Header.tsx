@@ -12,8 +12,7 @@ import {
 import { Input } from "@/Components/ui/input"
 import { Checkbox } from "@/Components/ui/checkbox"
 import { Label } from "@/Components/ui/label"
-
-
+import { Button } from "@/Components/ui/button"
 
 const sortOptions = [
   "Default",
@@ -66,29 +65,43 @@ export function Header(){
       </div>
     </div>
 
+  <div className='sort'>
+    <Select value={selectedSort} onValueChange={(value) => setSelectedSort(value)}>
+    <SelectTrigger className="SelectTrigger">
+      <SelectValue placeholder="Sort by..." />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel></SelectLabel>
+        {sortOptions.map((option) => (
+          <SelectItem key={option} value={option}>
+            {option}
+          </SelectItem>
+        ))}
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+  </div>
 
-
-    </header>
-  )
-}
-
-
-export function SelectDemo() {
-  return (
-<Select value={selectedSort} onValueChange={(value) => setSelectedSort(value)}>
-  <SelectTrigger className="w-[220px]">
-    <SelectValue placeholder="Sort by..." />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectGroup>
-      <SelectLabel>Sort Options</SelectLabel>
-      {sortOptions.map((option) => (
-        <SelectItem key={option} value={option}>
-          {option}
-        </SelectItem>
-      ))}
-    </SelectGroup>
-  </SelectContent>
-</Select>
-  )
+<div className='Filters'>
+  <span className='Text filters'>Filters:</span>
+    <Button variant={filters.watched ? "default":"outline"}
+      onClick={() => toggleFilter("watched")}>
+      Watched
+    </Button>
+    <Button variant={filters.favorites ? "secondary":"outline"}
+      onClick={() => toggleFilter("favorites")}>
+      Favorites
+    </Button>
+    <Button variant={filters.notes ? "secondary":"outline"}
+      onClick={() => toggleFilter("notes")}>
+      With Notes
+    </Button>
+    <Button variant={filters.rating ? "default":"outline"}
+      onClick={() => toggleFilter("rating")}>
+      Rating
+    </Button>
+  </div>
+</header>
+);
 }
