@@ -28,6 +28,7 @@ const [search, setSearch] = useState('');
 const [includeSynopsis, setIncludeSynopsis] = useState(false);
 const [selectedSort, setSelectedSort] = useState('Default');
 const [showRatingDropdown, setShowRatingDropdown] = useState(false);
+const [selectedRatingFilter, setSelectedRatingFilter]= useState('all-movies');
 interface ActiveFilters {
   watched: boolean;
   favorites: boolean;
@@ -45,10 +46,20 @@ const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
 type FilterKey = 'watched' | 'favorites' | 'withNotes' | 'rating';
 
 const toggleFilter = (key: FilterKey) => {
-  setActiveFilters(prev => ({
-    ...prev,
-    [key]: !prev[key]
-  }));
+  if (key === 'rating') {
+    setShowRatingDropdown(!showRatingDropdown);
+    if (selectedRatingFilter !== 'all-movies') {
+      setActiveFilters(prev => ({
+        ...prev,
+        rating: true
+      }));
+    }
+  } else {
+    setActiveFilters(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  }
 };
 
 const removeFilter = (key: FilterKey) => {
@@ -56,6 +67,25 @@ const removeFilter = (key: FilterKey) => {
     ...prev,
     [key]: false
   }));
+    if (key === 'rating') {
+    setSelectedRatingFilter('all-movies');
+  }
+};
+
+const handleRatingSelect = (ratingId: string) => {
+  setSelectedRatingFilter(ratingId);
+  if (ratingId !== 'all-movies') {
+    setActiveFilters(prev => ({
+      ...prev,
+      rating: true
+    }));
+  } else {
+    setActiveFilters(prev => ({
+      ...prev,
+      rating: false
+    }));
+  }
+  setShowRatingDropdown(false);
 };
 
 return (
@@ -133,71 +163,98 @@ return (
         <FileText className="w-4 h-4 mr-1.5" />
         With Notes
       </button>
-      <div className="relative">
-        <button 
-          className="flex items-center px-3 py-1.5 rounded-md text-sm border border-gray-300 bg-white"
-          onClick={() => setShowRatingDropdown(!showRatingDropdown)}>
-          <Star className="w-4 h-4 mr-1.5" />
-          Rating
-        </button> 
+    <div className="relative">
+      <button 
+        className="flex items-center px-3 py-1.5 rounded-md text-sm border border-gray-300 bg-white"
+        onClick={() => setShowRatingDropdown(!showRatingDropdown)}>
+        <Star className="w-4 h-4 mr-1.5" />
+        Rating
+      </button> 
 
       {showRatingDropdown && (
         <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg w-48 z-10">
           <div className="p-2">
             <div className="flex items-center py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">
-              <input type="radio" id="all-movies" name="rating" className="mr-2" />
+              <input type="radio" id="all-movies" name="rating" className="mr-2" 
+              checked={selectedRatingFilter === 'all-movies'}
+              onChange={() => handleRatingSelect('all-movies')}/>
               <label htmlFor="all-movies" className="text-sm">All Movies</label>
             </div>
             
             <div className="flex items-center py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">
-              <input type="radio" id="any-rating" name="rating" className="mr-2" />
+              <input type="radio" id="any-rating" name="rating" className="mr-2"
+              checked={selectedRatingFilter === 'any-rating'}
+              onChange={() => handleRatingSelect('any-rating')}/>
               <label htmlFor="any-rating" className="text-sm flex items-center">
-                Any Rating <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500" />
+                Any Rating 
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
               </label>
             </div>
             
             <div className="flex items-center py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">
-              <input type="radio" id="unrated" name="rating" className="mr-2" />
+              <input type="radio" id="unrated" name="rating" className="mr-2" 
+              checked={selectedRatingFilter === 'unrated'}
+              onChange={() => handleRatingSelect('unrated')}/>
               <label htmlFor="unrated" className="text-sm">Unrated</label>
             </div>
             
             <div className="flex items-center py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">
-              <input type="radio" id="5-stars" name="rating" className="mr-2" />
+              <input type="radio" id="5-stars" name="rating" className="mr-2"
+              checked={selectedRatingFilter === '5-stars'}
+              onChange={() => handleRatingSelect('5-stars')} />
               <label htmlFor="5-stars" className="text-sm flex items-center">
                 5 Stars 
-                <span className="ml-1 text-yellow-500 flex">★★★★★</span>
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
               </label>
             </div>
             
             <div className="flex items-center py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">
-              <input type="radio" id="4-stars" name="rating" className="mr-2" />
+              <input type="radio" id="4-stars" name="rating" className="mr-2"
+              checked={selectedRatingFilter === '4-stars'}
+              onChange={() => handleRatingSelect('4-stars')} />
               <label htmlFor="4-stars" className="text-sm flex items-center">
                 4 Stars
-                <span className="ml-1 text-yellow-500 flex">★★★★</span>
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
               </label>
             </div>
             
             <div className="flex items-center py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">
-              <input type="radio" id="3-stars" name="rating" className="mr-2" />
+              <input type="radio" id="3-stars" name="rating" className="mr-2"
+              checked={selectedRatingFilter === '3-stars'}
+              onChange={() => handleRatingSelect('3-stars')} />
               <label htmlFor="3-stars" className="text-sm flex items-center">
                 3 Stars
-                <span className="ml-1 text-yellow-500 flex">★★★</span>
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
               </label>
             </div>
             
             <div className="flex items-center py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">
-              <input type="radio" id="2-stars" name="rating" className="mr-2" />
+              <input type="radio" id="2-stars" name="rating" className="mr-2"
+              checked={selectedRatingFilter === '2-stars'}
+              onChange={() => handleRatingSelect('2-stars')} />
               <label htmlFor="2-stars" className="text-sm flex items-center">
                 2 Stars
-                <span className="ml-1 text-yellow-500 flex">★★</span>
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
               </label>
             </div>
             
             <div className="flex items-center py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">
-              <input type="radio" id="1-star" name="rating" className="mr-2" />
+              <input type="radio" id="1-star" name="rating" className="mr-2"
+              checked={selectedRatingFilter === '1-star'}
+              onChange={() => handleRatingSelect('1-star')} />
               <label htmlFor="1-star" className="text-sm flex items-center">
                 1 Star
-                <span className="ml-1 text-yellow-500 flex">★</span>
+                <Star className="w-3 h-3 ml-1 text-yellow-500 fill-yellow-500 stroke stroke-black" />
               </label>
             </div>
           </div>
@@ -246,14 +303,19 @@ return (
 
       {activeFilters.rating && (
         <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-yellow-50 text-yellow-700 border-yellow-200">
-          Rating
+          {selectedRatingFilter === 'any-rating' && 'Any Rating'}
+          {selectedRatingFilter === 'unrated' && 'Unrated'}
+          {selectedRatingFilter === '5-stars' && '5 Stars'}
+          {selectedRatingFilter === '4-stars' && '4 Stars'}
+          {selectedRatingFilter === '3-stars' && '3 Stars'}
+          {selectedRatingFilter === '2-stars' && '2 Stars'}
+          {selectedRatingFilter === '1-star' && '1 Star'}
           <button 
           className="ml-1 hover:text-yellow-900"
           onClick={() => removeFilter('rating')}>
           <X className="w-3 h-3" />
           </button>
         </div>
-
 )}
 </div>
 </div>
