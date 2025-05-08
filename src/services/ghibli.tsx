@@ -32,6 +32,5 @@ export async function fetchFilms(): Promise<Film[]> {
   }));
 }
 
-// exporta o tipo com os campos extras
 import type { Film } from "../Components/Grid";
 export type { Film };
