@@ -103,6 +103,20 @@ export default function MovieGrid({
     closeModal();
   };
 
+  const higlightText = (text: string, query:string)=>{
+    if (!query.trim()) return text;
+
+    try {
+      const parts = text.split(new RegExp(`(${query})`, 'gi'));
+      return parts.map((part, i) =>
+      part.toLowerCase() === query. toLowerCase() ?
+    <span key={i} className="bg-yellow-200">{part}</span>
+    : part );
+    } catch (e) {
+      return text;
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-4 ">
       {filteredFilms.map((film) => (
@@ -118,7 +132,7 @@ export default function MovieGrid({
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 z-2">
 
               <h3 className="text-white text-center text-lg font-semibold px-2">
-              {film.title}</h3>
+              {higlightText(film.title, searchQuery)}</h3>
 
             </div>
           </div>
@@ -158,7 +172,7 @@ export default function MovieGrid({
           </div>
 
           <CardContent className="flex-grow p-4">
-            <h2 className="text-lg font-bold mb-1 line-clamp-1 ">{film.title}</h2>
+            <h2 className="text-lg font-bold mb-1 line-clamp-1 ">{higlightText(film.title, searchQuery)}</h2>
             <div className="text-sm text-gray-500 mb-2 flex items-center ">
               <span>{film.release_date}</span>
               <Dot/>
@@ -185,7 +199,7 @@ export default function MovieGrid({
           </div>
 
             <p className={`mb-2 text-xs ${expandedSynopsis[film.id] ? '' : 'line-clamp-3'}`}>
-              {film.description}
+              {includeSynopsis && searchQuery ? higlightText(film.description, searchQuery) : film.description}
             </p>
             {film.description.length > 150 && (
               <button
