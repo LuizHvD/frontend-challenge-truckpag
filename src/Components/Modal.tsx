@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FileText, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/Components/ui/dialog";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
@@ -50,7 +50,7 @@ export default function Modal({
 
 return (
     <Dialog open= {isOpen} onOpenChange={handleCancel}>
-    <DialogContent className="sm:max-w-md">
+    <DialogContent className="sm:max-w-md bg-white border-none">
         <DialogHeader>
             <DialogTitle>Edit Notes for {filmTitle}</DialogTitle>
         </DialogHeader>
@@ -76,7 +76,7 @@ return (
                 </button>
               ))}
             <span className="ml-2 text-sm text-gray-500">
-                {rating === 0 ? "Not rated" : '${rating}/5 '}
+                {rating === 0 ? "Not rated" : `${rating}/5`}
             </span>
             </div>
         </div>
@@ -86,15 +86,15 @@ return (
             <Textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="Write yout notes here..."
+            placeholder="Write yout thoughts about this movie..."
             className="min-h-32"/>
         </div>
         </div>
     <DialogFooter className="flex justify-end gap-2">
-        <Button variant= "outline" onClick={handleCancel}>
+        <Button className="border-gray-300 font-light" variant= "outline" onClick={handleCancel}>
             Cancel
         </Button>
-        <Button onClick={handleSave} className="bg-black hover:bh-gray-800">
+        <Button onClick={handleSave} className="bg-gray-600 text-white" variant="outline">
             Save Notes
         </Button>
     </DialogFooter>

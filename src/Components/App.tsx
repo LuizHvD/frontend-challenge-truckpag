@@ -49,12 +49,20 @@ const toggleFavorite = (filmId: string) => {
   );
 };
 
-
-const toggleNotes = (filmId: string) => {
-  setFilms(prevFilms => 
-    prevFilms.map(film => 
-      film.id === filmId ? { ...film, hasNotes: !film.hasNotes } : film
-    )
+const saveFilmNotes = (filmId: string, notes: string, rating: number)=> {
+  setFilms(prevFilms =>
+    prevFilms.map(film => {
+      if (film.id === filmId) {
+        const hasNotes = notes.trim() !== '' || rating >0;
+        return {
+          ...film,
+          notes: notes,
+          userRating: rating,
+          hasNotes: hasNotes
+        };
+      }
+      return film;
+    })
   );
 };
 
@@ -103,7 +111,7 @@ return (
       selectedRatingFilter={selectedRatingFilter}
       toggleWatched={toggleWatched}
       toggleFavorite={toggleFavorite}
-      toggleNotes={toggleNotes}
+      saveFilmNotes={saveFilmNotes}
     />
   </div>
 );

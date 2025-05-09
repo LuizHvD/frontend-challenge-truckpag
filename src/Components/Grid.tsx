@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { ArrowDown } from 'lucide-react'
 import { Eye } from 'lucide-react';
+import Modal from "./Modal";
 
 
 interface Film {
@@ -20,6 +21,8 @@ interface Film {
   watched: boolean;
   favorite?: boolean;
   hasNotes?: boolean;
+  notes?: string;
+  userRating?: number;
 }
 
 export type { Film };
@@ -37,7 +40,7 @@ interface MovieGridProps {
   selectedRatingFilter?: string;
   toggleWatched: (filmId: string) => void;
   toggleFavorite: (filmId: string) => void;
-  toggleNotes: (filmId: string) => void;
+  saveFilmNotes?: (filmId: string, notes: string, rating:number)=> void;
 }
 
 export default function MovieGrid({
@@ -48,11 +51,11 @@ export default function MovieGrid({
   selectedRatingFilter = 'all-movies',
   toggleWatched,
   toggleFavorite,
-  toggleNotes
+  saveFilmNotes
 }: MovieGridProps) {
 
   const [expandedSynopsis, setExpandedSynopsis] = useState<Record<string, boolean>>({});
-
+  const [activeModal, setActiveModal] = useState<string | null>(null);
   const filteredFilms = films.filter(film => {
     
     const searchLower = searchQuery.toLowerCase();
@@ -61,12 +64,10 @@ export default function MovieGrid({
       return false;
     }
 
-    
     if (activeFilters.watched && !film.watched) return false;
     if (activeFilters.favorites && !film.favorite) return false;
     if (activeFilters.withNotes && !film.hasNotes) return false;
 
-   
     if (activeFilters.rating) {
       if (selectedRatingFilter === 'unrated' && (film.rt_score)) return false;
       if (selectedRatingFilter === '5-stars' && (film.rt_score)) return false;
@@ -84,6 +85,33 @@ export default function MovieGrid({
       ...prev,
       [filmId]: !prev[filmId]
     }));
+  };
+
+  const openModal = (filmId: string) => {
+    setActiveModal(filmId);
+  };
+
+  const closeModal = () => {
+    setActiveModal(null);
+  };
+
+  const handleSaveNotes = (filmId: string, notes: string, rating:number)=>{
+    if (saveFilmNotes){
+      saveFilmNotes(filmId, notes, rating);
+    }
+    closeModal();
+  };
+
+  const renderUserRating = (rating?: number)=>{
+    if (!rating) return null;
+    return (
+      <div className="flex items-center">
+        {[...Array(5).map((_,i)=> (
+          <Star key={i} 
+          className={'w-3 h-3 ${i < rating ? "text-yello2-500 fill-yello2-500" : "text-gray-300"}'}/>
+        ))]}
+      </div>
+    );
   };
 
   return (
@@ -130,6 +158,14 @@ export default function MovieGrid({
                 </Badge>
               )}
             </div>
+            {film.userRating && (
+              <div className="absolute top-2 right-20 flex flex-col gap-1 items-end">
+                <Badge className="bg-yellow-500 text-white rounded-full">
+                <Star className="2-3 h-3 mr-1 fill-white"/>
+                {film.userRating}/5
+                </Badge>
+              </div>
+            )}
           </div>
 
           <CardContent className="flex-grow p-4">
@@ -140,9 +176,12 @@ export default function MovieGrid({
               <span>{film.running_time}</span>
             </div>
 
+            <div className="flex items-center justify-between mb-2">
             <div className="flex items-center mb-2">
               <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
               <span className="font-bold ml-1">{film.rt_score}%</span>
+            </div>
+            {film.userRating ? renderUserRating(film.userRating) : null}
             </div>
 
             <p className={`mb-2 text-xs ${expandedSynopsis[film.id] ? '' : 'line-clamp-3'}`}>
@@ -165,6 +204,15 @@ export default function MovieGrid({
                 <span className="font-semibold">Producer:</span> {film.producer}
               </div>
             </div>
+
+            {film.hasNotes && film.notes && (
+              <div className="mt-3 p-2 bg-blue-50 rounded-md text-xs bg-blue-100">
+              <p className=" text-blue-700 flex gap-2 items-center ">
+                <FileText className="flex h-3 w-3"/>
+                Your Notes:</p>
+              <p className="text-gray-700">{film.notes}</p>
+              </div>
+            )}
           </CardContent>
 
           <CardFooter className="p-4 pt-0 flex flex-col gap-2 content-center items-center ">
@@ -172,7 +220,7 @@ export default function MovieGrid({
               variant="ghost"
               size="sm"
               onClick={() => toggleWatched(film.id)}
-              className={film.watched ? "text-white bg-black" : " border border-gray-300 text-black hover:bg-gray-200/60 "}>
+              className={film.watched ? "text-white bg-black" : " font-light border border-gray-300 text-black hover:bg-gray-200/60 "}>
               <Eye className={`w-4 h-4 mr-1 `} />
               {film.watched ? 'Watched' : 'Mark Watched'}
             </Button>
@@ -181,7 +229,7 @@ export default function MovieGrid({
               variant="ghost"
               size="sm"
               onClick={() => toggleFavorite(film.id)}
-              className={film.favorite ? "text-white bg-red-500 " : "bg-white border border-gray-300 text-black hover:bg-gray-200/60 "}>
+              className={film.favorite ? "text-white bg-red-500 " : "font-light bg-white border border-gray-300 text-black hover:bg-gray-200/60 "}>
               <Heart className={`w-4 h-4 mr-1 fill-white`} />
               {film.favorite ? 'Favorite' : 'Add Favorite'}
             </Button>
@@ -189,12 +237,24 @@ export default function MovieGrid({
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => toggleNotes(film.id)}
-              className= "border border-gray-300 text-black hover:bg-gray-200/60">
+              onClick={() => openModal(film.id)}
+              className= "border border-gray-300 text-black font-light hover:bg-gray-200/60">
               <FileText className="w-4 h-4 mr-1" />
               Edit Notes
             </Button>
           </CardFooter>
+
+          {activeModal === film.id && (
+            <Modal 
+            isOpen={true}
+            onClose={closeModal}
+            filmId={film.id}
+            filmTitle={film.title}
+            currentNotes={film.notes || ""}
+            currentRating={film.userRating || 0}
+            onSave={handleSaveNotes}
+            />
+          )}
         </Card>
       ))}
     </div>
