@@ -20,6 +20,10 @@ export default function App() {
 useEffect(() => {
   fetchFilms()
     .then(data => {
+      const savedData=localStorage.getItem('ghibli-films');
+      if (savedData){
+        setFilms(JSON.parse(savedData));
+      } else {
       const updatedFilms = data.map(film => ({
         ...film,
         watched: false,
@@ -27,11 +31,18 @@ useEffect(() => {
         hasNotes: false,
       }));
       setFilms(updatedFilms);
+      }
     })
     .catch(err => {
       console.error("Erro ao buscar filmes:", err);
     });
 }, []);
+
+useEffect(()=> {
+  if (films.length > 0){
+    localStorage.setItem('ghibli-films', JSON.stringify(films));
+  }
+},[films]);
 
 const toggleWatched = (filmId: string) => {
   setFilms(prevFilms => 
