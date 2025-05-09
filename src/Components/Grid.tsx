@@ -6,6 +6,7 @@ import { Badge } from "./ui/badge";
 import { ArrowDown } from 'lucide-react'
 import { Eye } from 'lucide-react';
 import Modal from "./Modal";
+import { Dot } from 'lucide-react';
 
 
 interface Film {
@@ -69,12 +70,12 @@ export default function MovieGrid({
     if (activeFilters.withNotes && !film.hasNotes) return false;
 
     if (activeFilters.rating) {
-      if (selectedRatingFilter === 'unrated' && (film.rt_score)) return false;
-      if (selectedRatingFilter === '5-stars' && (film.rt_score)) return false;
-      if (selectedRatingFilter === '4-stars' && (film.rt_score)) return false;
-      if (selectedRatingFilter === '3-stars' && (film.rt_score)) return false;
-      if (selectedRatingFilter === '2-stars' && (film.rt_score)) return false;
-      if (selectedRatingFilter === '1-star' && (film.rt_score)) return false;
+      if (selectedRatingFilter === 'unrated' && film.userRating) return false;
+      if (selectedRatingFilter === '5-stars' && film.userRating !== 5) return false;
+      if (selectedRatingFilter === '4-stars' && film.userRating !== 4) return false;
+      if (selectedRatingFilter === '3-stars' && film.userRating !==3) return false;
+      if (selectedRatingFilter === '2-stars' && film.userRating !==2) return false;
+      if (selectedRatingFilter === '1-star' && film.userRating !==1) return false;
     }
 
     return true;
@@ -102,18 +103,6 @@ export default function MovieGrid({
     closeModal();
   };
 
-  const renderUserRating = (rating?: number)=>{
-    if (!rating) return null;
-    return (
-      <div className="flex items-center">
-        {[...Array(5).map((_,i)=> (
-          <Star key={i} 
-          className={'w-3 h-3 ${i < rating ? "text-yello2-500 fill-yello2-500" : "text-gray-300"}'}/>
-        ))]}
-      </div>
-    );
-  };
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-4 ">
       {filteredFilms.map((film) => (
@@ -124,9 +113,9 @@ export default function MovieGrid({
               alt={`${film.title} poster`}
               className="object-cover transition-transform duration-300 w-full h-full " />
 
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300 z-10 ">
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition duration-300 z-1 ">
 
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 z-20">
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 z-2">
 
               <h3 className="text-white text-center text-lg font-semibold px-2">
               {film.title}</h3>
@@ -146,20 +135,20 @@ export default function MovieGrid({
               {film.favorite && (
                 <Badge className="bg-red-500 text-white rounded-full ">
                   <Heart className="w-3 h-3 mr-1 fill-white" />
-                  Watched
+                  Favorite
                 </Badge>
               )}
             </div>
-            <div className="absolute top-9 right-2 flex flex-col gap-1 items-end ">
-              {film.hasNotes && (
+            <div className="absolute top-8 right-2 flex flex-col gap-1 items-end ">
+              {film.notes && film.notes.trim() !== '' && (
                 <Badge className="bg-blue-500 text-white rounded-full ">
                   <FileText className="w-3 h-3 mr-1" />
                   Notes
                 </Badge>
               )}
             </div>
-            {film.userRating && (
-              <div className="absolute top-2 right-20 flex flex-col gap-1 items-end">
+            {film.userRating && film.userRating > 0 && (
+              <div className="absolute top-14 right-2 flex flex-col gap-1 items-end">
                 <Badge className="bg-yellow-500 text-white rounded-full">
                 <Star className="2-3 h-3 mr-1 fill-white"/>
                 {film.userRating}/5
@@ -169,20 +158,31 @@ export default function MovieGrid({
           </div>
 
           <CardContent className="flex-grow p-4">
-            <h2 className="text-lg font-bold mb-1 line-clamp-1">{film.title}</h2>
-            <div className="text-sm text-gray-500 mb-2">
+            <h2 className="text-lg font-bold mb-1 line-clamp-1 ">{film.title}</h2>
+            <div className="text-sm text-gray-500 mb-2 flex items-center ">
               <span>{film.release_date}</span>
-              <span className="mx-2">•</span>
+              <Dot/>
               <span>{film.running_time}</span>
             </div>
 
             <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center mb-2">
+            <div className="flex items-center ">
               <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-              <span className="font-bold ml-1">{film.rt_score}%</span>
+              <span className=" ml-1">{film.rt_score}%</span>
             </div>
-            {film.userRating ? renderUserRating(film.userRating) : null}
-            </div>
+            <div className="text-xs text-gray-400 italic">
+            {film.userRating && film.userRating > 0 ?
+              <div className="text-sm items-center">
+                <div className="flex">
+                  {[...Array(5)].map((_,i) => (
+                    <Star key={i} className={`w-3 h-3 ${i < (film.userRating || 0) ? "!text-yellow-500 fill-yellow-500" : "text-gray-300"}`}/>
+                  ))}
+                  </div>
+                </div>
+                : <span>Not rated</span>
+            }
+           </div>
+          </div>
 
             <p className={`mb-2 text-xs ${expandedSynopsis[film.id] ? '' : 'line-clamp-3'}`}>
               {film.description}

@@ -58,17 +58,17 @@ return (
         <div className="mb-4">
             <p className="text-sm font-medium mb-2">Your Rating:</p>
             <div className="flex items-center gap-1">
-                {[1,2,3,4,5].map((star) => (
+                {[...Array(5)].map((_, i) => (
                     <button
-                    key={star}
+                    key={i}
                     type="button"
-                    onClick={()=> handleStarClick(star)}
-                    onMouseEnter={()=> setHoveredRating(star)}
+                    onClick={()=> handleStarClick(i)}
+                    onMouseEnter={()=> setHoveredRating(i)}
                     onMouseLeave={()=> setHoveredRating(0)}
                     className="focus:outline-none">
                   <Star
                     className={`w-6 h-6 cursor-pointer ${
-                      star <= (hoveredRating || rating)
+                      i <= (hoveredRating || rating)
                         ? "text-yellow-500 fill-yellow-500"
                         : "text-gray-300"
                     }`}
