@@ -130,7 +130,7 @@ if (filteredFilms.length === 0) {
         </h3>
         <Button 
         variant="outline"
-        className="border-gray-300 text-gray700 hover:bg-gray-200/60"
+        className="border-gray-300 text-gray700 hover:bg-gray-200/60 cursor-pointer"
         onClick={() => { if (onClearFilters) onClearFilters();
         }}>
         Clear All Filters
