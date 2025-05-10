@@ -100,6 +100,19 @@ const sortFilms = (films: Film[]) => {
 
 const sortedFilms = sortFilms(films);
 
+const handleClearFilters = () =>{
+  setSearchQuery('');
+  setIncludeSynopsis(false);
+  setActiveFilters({
+  watched: false,
+  favorites: false, 
+  withNotes: false,
+  rating: false
+  });
+  setSelectedRatingFilter('all-movies');
+  setSelectedSort('Default');
+};
+
 return (
   <div className="max-w-6xl mx-auto">
     <Header 
@@ -113,6 +126,7 @@ return (
       setSelectedRatingFilter={setSelectedRatingFilter}
       selectedSort={selectedSort}
       setSelectedSort={setSelectedSort}
+      onClearFilters={handleClearFilters}
     />
     <MovieGrid 
       films={sortedFilms}
@@ -123,6 +137,7 @@ return (
       toggleWatched={toggleWatched}
       toggleFavorite={toggleFavorite}
       saveFilmNotes={saveFilmNotes}
+      onClearFilters={handleClearFilters}
     />
   </div>
 );

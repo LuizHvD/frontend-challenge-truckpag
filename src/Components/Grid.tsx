@@ -29,6 +29,7 @@ interface Film {
 export type { Film };
 
 interface MovieGridProps {
+  
   films: Film[];
   searchQuery?: string;
   includeSynopsis?: boolean;
@@ -42,6 +43,8 @@ interface MovieGridProps {
   toggleWatched: (filmId: string) => void;
   toggleFavorite: (filmId: string) => void;
   saveFilmNotes?: (filmId: string, notes: string, rating:number)=> void;
+  onClearFilters?: () => void;
+  
 }
 
 export default function MovieGrid({
@@ -52,9 +55,10 @@ export default function MovieGrid({
   selectedRatingFilter = 'all-movies',
   toggleWatched,
   toggleFavorite,
-  saveFilmNotes
+  saveFilmNotes,
+  onClearFilters
 }: MovieGridProps) {
-
+  
   const [expandedSynopsis, setExpandedSynopsis] = useState<Record<string, boolean>>({});
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const filteredFilms = films.filter(film => {
@@ -117,6 +121,25 @@ export default function MovieGrid({
     }
   };
 
+if (filteredFilms.length === 0) {
+  return (
+    <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+      <div className="mb-4 text-gray-400">
+        <h3 className="text-xl font-semibold text-gray-700 mb-2">
+          No movies found matching "{searchQuery}"
+        </h3>
+        <Button 
+        variant="outline"
+        className="border-gray-300 text-gray700 hover:bg-gray-200/60"
+        onClick={() => { if (onClearFilters) onClearFilters();
+        }}>
+        Clear All Filters
+        </Button>
+      </div>
+    </div>
+  );
+}
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-4 ">
       {filteredFilms.map((film) => (
@@ -132,7 +155,7 @@ export default function MovieGrid({
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 z-2">
 
               <h3 className="text-white text-center text-lg font-semibold px-2">
-              {higlightText(film.title, searchQuery)}</h3>
+              {film.title}</h3>
 
             </div>
           </div>
@@ -172,7 +195,7 @@ export default function MovieGrid({
           </div>
 
           <CardContent className="flex-grow p-4">
-            <h2 className="text-lg font-bold mb-1 line-clamp-1 ">{higlightText(film.title, searchQuery)}</h2>
+            <h2 className="text-lg font-bold mb-1 line-clamp-1 ">{film.title}</h2>
             <div className="text-sm text-gray-500 mb-2 flex items-center ">
               <span>{film.release_date}</span>
               <Dot/>

@@ -30,6 +30,8 @@ interface HeaderProps {
   setSelectedRatingFilter: (filter: string) => void;
   selectedSort: string;
   setSelectedSort: (sort: string) => void;
+  onClearFilters?: () => void;
+
 }
 
 export default function Header({
@@ -42,7 +44,8 @@ setActiveFilters,
 selectedRatingFilter,
 setSelectedRatingFilter,
 selectedSort,
-setSelectedSort
+setSelectedSort,
+onClearFilters
 }: HeaderProps) {
 const [showRatingDropdown, setShowRatingDropdown] = useState(false);
 
