@@ -50,13 +50,13 @@ export default function Modal({
 
 return (
     <Dialog open= {isOpen} onOpenChange={handleCancel}>
-    <DialogContent className="sm:max-w-md bg-white border-none">
+    <DialogContent className="w-[90%] max-w-md bg-white border-none p-4 sm:p-6">
         <DialogHeader>
-            <DialogTitle>Edit Notes for {filmTitle}</DialogTitle>
+            <DialogTitle className="text-base sm:text-lg">Edit Notes for {filmTitle}</DialogTitle>
         </DialogHeader>
-        <div className="py-4">
-        <div className="mb-4">
-            <p className="text-sm font-medium mb-2">Your Rating:</p>
+        <div className="py-3 sm:py4">
+        <div className="mb-3 sm:mb-4">
+            <p className="text-xs sm:text-sm font-medium mb-1 sm:mb-2">Your Rating:</p>
             <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
                     <button
@@ -67,7 +67,7 @@ return (
                     onMouseLeave={()=> setHoveredRating(0)}
                     className="focus:outline-none">
                   <Star
-                    className={`w-6 h-6 cursor-pointer ${
+                    className={`w-5 h-5 sm:w-6 sm:h-6 cursor-pointer ${
                       i <= (hoveredRating || rating)
                         ? "text-yellow-500 fill-yellow-500"
                         : "text-gray-300"
@@ -75,26 +75,26 @@ return (
                   />
                 </button>
               ))}
-            <span className="ml-2 text-sm text-gray-500">
+            <span className="ml-2 text-xs sm:text-sm text-gray-500">
                 {rating === 0 ? "Not rated" : `${rating}/5`}
             </span>
             </div>
         </div>
 
         <div>
-            <p className="text-sm font-medium mb-2"> Your Notes:</p>
+            <p className="text-xs sm:text-sm font-medium mb-1 sm:mb-2"> Your Notes:</p>
             <Textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Write yout thoughts about this movie..."
-            className="min-h-32"/>
+            className="min-h-24 sm:min-h-32 text-sm"/>
         </div>
         </div>
-    <DialogFooter className="flex justify-end gap-2">
-        <Button className="border-gray-300 font-light" variant= "outline" onClick={handleCancel}>
+    <DialogFooter className="flex justify-end gap-2 pt-2">
+        <Button className="border-gray-300 font-light text-cs sm:text-sm" variant= "outline" onClick={handleCancel}>
             Cancel
         </Button>
-        <Button onClick={handleSave} className="bg-gray-600 text-white" variant="outline">
+        <Button onClick={handleSave} className="bg-gray-600 text-white text-xs sm:text-sm" variant="outline">
             Save Notes
         </Button>
     </DialogFooter>

@@ -141,7 +141,7 @@ if (filteredFilms.length === 0) {
 }
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 px-4 ">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-4 sm:mt-6 px-2 sm:px-4 ">
       {filteredFilms.map((film) => (
         <Card key={film.id} className="overflow-hidden flex flex-col py-0 group border border-gray-200 hover:shadow-lg ">
           <div className="relative aspect-[2/3] overflow-hidden ">
@@ -154,7 +154,7 @@ if (filteredFilms.length === 0) {
 
               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300 z-2">
 
-              <h3 className="text-white text-center text-lg font-semibold px-2">
+              <h3 className="text-white text-center text-base sm:text-lg text-lg font-semibold px-2">
               {film.title}</h3>
 
             </div>
@@ -194,11 +194,11 @@ if (filteredFilms.length === 0) {
             )}
           </div>
 
-          <CardContent className="flex-grow p-4">
-            <h2 className="text-lg font-bold mb-1 line-clamp-1 ">{film.title}</h2>
-            <div className="text-sm text-gray-500 mb-2 flex items-center ">
+          <CardContent className="flex-grow p-3 sm:p-4">
+            <h2 className="text-base sm:text-lg font-bold mb-1 line-clamp-1 ">{film.title}</h2>
+            <div className="text-xs sm:text-sm text-gray-500 mb-2 flex items-center ">
               <span>{film.release_date}</span>
-              <Dot/>
+              <Dot />
               <span>{film.running_time}</span>
             </div>
 
@@ -252,13 +252,13 @@ if (filteredFilms.length === 0) {
             )}
           </CardContent>
 
-          <CardFooter className="p-4 pt-0 flex flex-col gap-2 content-center items-center ">
+          <CardFooter className="p-3 sm:p-4 pt-0 flex flex-col gap-2 content-center items-center ">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => toggleWatched(film.id)}
-              className={film.watched ? "text-white bg-black" : " font-light border border-gray-300 text-black hover:bg-gray-200/60 "}>
-              <Eye className={`w-4 h-4 mr-1 `} />
+              className={ `text-xs w-full ${film.watched ? "text-white bg-black" : " font-light border border-gray-300 text-black hover:bg-gray-200/60 "}`}>
+              <Eye className={`w-3 h-3 mr-1 sm:w-4 sm:h-4 `} />
               {film.watched ? 'Watched' : 'Mark Watched'}
             </Button>
 
@@ -266,8 +266,8 @@ if (filteredFilms.length === 0) {
               variant="ghost"
               size="sm"
               onClick={() => toggleFavorite(film.id)}
-              className={film.favorite ? "text-white bg-red-500 " : "font-light bg-white border border-gray-300 text-black hover:bg-gray-200/60 "}>
-              <Heart className={`w-4 h-4 mr-1 fill-white`} />
+              className={`text-xs w-full ${film.favorite ? "text-white bg-red-500 " : "font-light bg-white border border-gray-300 text-black hover:bg-gray-200/60 "}`}>
+              <Heart className={`w-3 h-4 sm:w-4 sm:h-4 mr-1 fill-white`} />
               {film.favorite ? 'Favorite' : 'Add Favorite'}
             </Button>
 
@@ -275,8 +275,8 @@ if (filteredFilms.length === 0) {
               variant="ghost"
               size="sm"
               onClick={() => openModal(film.id)}
-              className= "border border-gray-300 text-black font-light hover:bg-gray-200/60">
-              <FileText className="w-4 h-4 mr-1" />
+              className= "text-xs w-full border border-gray-300 text-black font-light hover:bg-gray-200/60">
+              <FileText className="w-3 h-3 sm:h-4 sm:w-4 mr-1" />
               Edit Notes
             </Button>
           </CardFooter>

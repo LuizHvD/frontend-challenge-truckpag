@@ -113,18 +113,18 @@ const handleRatingSelect = (ratingId: string) => {
 };
 
 return (
-  <div className="max-w-6xl mx-auto px-4 py-6">
-    <header className="text-center mb-8">
-      <h1 className="text-4xl font-bold text-gray-800">
+  <div className="max-w-6xl mx-auto px-2 sm:px-4 py-4 sm:py-6">
+    <header className="text-center mb-4 sm:mb-8">
+      <h1 className="text-2xl sm:text-4x1 font-bold text-gray-800">
         Studio Ghibli Collection
       </h1>
-      <p className="text-gray-600 mt-2">
+      <p className="text-gray-600 mt-2 text-sm sm:text-base mt-1 sm:mt-2 px-2" >
         Explore the magical world of Studio Ghibli films. Mark your favorites and keep track of what you've watched.
       </p>
     </header>
 
-<div className="flex flex-col space-y-4">
-  <div className="flex items-center justify-between gap-4">
+<div className="flex flex-col space-y-3 sm:space-y-4">
+  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:justify-between sm:gap-4 items-center">
     <div className="relative w-full">
       <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
         <Search className="w-4 h-4" />
@@ -138,7 +138,7 @@ return (
     </div>
 
     <Select value={selectedSort} onValueChange={setSelectedSort}>
-      <SelectTrigger className="cursor-pointer w-48 bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-black">
+      <SelectTrigger className="cursor-pointer w-full sm:w-48 mt-2 sm:mt-0 bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-black focus:border-black">
         <SelectValue placeholder="Default" />
       </SelectTrigger>
       <SelectContent className="bg-white shadow-lg border border-gray-200">
@@ -166,37 +166,37 @@ return (
 </div>
 
 <div className="flex flex-col space-y-2">
-  <div className="flex items-center space-x-2">
+  <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
     <span className="text-sm font-medium text-gray-600">Filters:</span>
-    <div className="flex space-x-2">
+    <div className="flex flex-wrap gap-2">
       <button
-        className={`cursor-pointer flex items-center px-3 py-1.5 rounded-md text-sm ${activeFilters.watched ? 'bg-green-100 text-green-800' : 'border border-gray-300'}`}
+        className={`cursor-pointer flex items-center px-2 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm ${activeFilters.watched ? 'bg-green-100 text-green-800' : 'border border-gray-300'}`}
         onClick={() => toggleFilter('watched')}>
-        <Eye className="w-4 h-4 mr-1.5" />
+        <Eye className="w-3 h-3 sm:w-4 sm:-h4 mr-1 sm:mr-1.5" />
         Watched
       </button>
       <button
-        className={`cursor-pointer flex items-center px-3 py-1.5 rounded-md text-sm ${activeFilters.favorites ? 'bg-red-100 text-red-800' : 'border border-gray-300'}`}
+        className={`cursor-pointer flex items-center px-2 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm ${activeFilters.favorites ? 'bg-red-100 text-red-800' : 'border border-gray-300'}`}
         onClick={() => toggleFilter('favorites')}>
-        <Heart className="w-4 h-4 mr-1.5" />
+        <Heart className="w-3 h-3 sm:w-4 sm:-h4 mr-1 sm:mr-1.5" />
         Favorites
       </button>
       <button
-        className={`cursor-pointer flex items-center px-3 py-1.5 rounded-md text-sm ${activeFilters.withNotes ? 'bg-blue-100 text-blue-800' : 'border border-gray-300'}`}
+        className={`cursor-pointer flex items-center px-2 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm ${activeFilters.withNotes ? 'bg-blue-100 text-blue-800' : 'border border-gray-300'}`}
         onClick={() => toggleFilter('withNotes')}>
-        <FileText className="w-4 h-4 mr-1.5" />
+        <FileText className="w-3 h-3 sm:w-4 sm:-h4 mr-1 sm:mr-1.5" />
         With Notes
       </button>
       <div className="relative ">
         <button
-          className={`cursor-pointer flex items-center px-3 py-1.5 rounded-md text-sm ${activeFilters.rating ? 'bg-yellow-100 text-yellow-800' : 'border border-gray-300 bg-white'}`}
+          className={`cursor-pointer flex items-center px-2 sm:px-3 sm:py-1.5 rounded-md text-xs sm:text-sm ${activeFilters.rating ? 'bg-yellow-100 text-yellow-800' : 'border border-gray-300 bg-white'}`}
           onClick={() => toggleFilter('rating')}>
-          <Star className="w-4 h-4 mr-1.5" />
+          <Star className="w-3 h-3 sm:w-4 sm:-h4 mr-1 sm:mr-1.5" />
           Rating
         </button>
 
         {showRatingDropdown && (
-          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-lg w-48 z-10">
+          <div className="absolute top-full right-0 sm:left-0 sm:right-auto mt-1 bg-white border border-gray-200 rounded-md shadow-lg w-48 z-10">
             <div className="p-2">
               {ratingFilterOptions.map(option => (
                 <div key={option.id} className="flex items-center py-1 px-2 hover:bg-gray-100 rounded cursor-pointer">
@@ -220,11 +220,12 @@ return (
         )}
       </div>
 
-      <div className="ml-auto">
+      <div className="sm:ml-auto">
       {onClearFilters && (searchQuery || activeFilters.watched || activeFilters.favorites || activeFilters.withNotes || activeFilters.rating) && (
           <Button 
-            onClick={onClearFilters} 
-            className="cursor-pointer text-sm font-light py-1 px-3 rounded-md border border-gray-300 hover:bg-gray-200/60 flex items-center"
+            onClick={onClearFilters}
+            variant="ghost"
+            className="cursor-pointer text-xs sm:text-sm font-light py-1 px-2 sm:px-3 rounded-md border border-gray-300 hover:bg-gray-200/60 flex items-center h-4.5 sm:h-8.5"
           >
             Clear All
           </Button>
@@ -235,8 +236,8 @@ return (
 </div>
 
   {(activeFilters.watched || activeFilters.favorites || activeFilters.withNotes || activeFilters.rating) && (
-    <div className="flex items-center">
-      <span className="text-sm text-gray-600 mr-2">Active filters:</span>
+    <div className="flex flex-col sm:flex-row sm:items-center">
+      <span className="text-sm text-gray-600 sm:mr-2 mb-1 sm:b-0">Active filters:</span>
       <div className="flex flex-wrap gap-2">
         {activeFilters.watched && (
           <div className=" h-5.5 inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-green-50 text-green-700 border-green-200">
